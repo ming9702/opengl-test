@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glguitest", "glguitest\glguitest.vcxproj", "{25FF694F-3F3A-4B1D-8DB8-C9441D43BC6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{25FF694F-3F3A-4B1D-8DB8-C9441D43BC6E}.Debug|x64.ActiveCfg = Debug|x64
+		{25FF694F-3F3A-4B1D-8DB8-C9441D43BC6E}.Debug|x64.Build.0 = Debug|x64
+		{25FF694F-3F3A-4B1D-8DB8-C9441D43BC6E}.Release|x64.ActiveCfg = Release|x64
+		{25FF694F-3F3A-4B1D-8DB8-C9441D43BC6E}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F08F6D8F-0816-4225-8A1E-178EE1D4B66F}
+	EndGlobalSection
+EndGlobal
