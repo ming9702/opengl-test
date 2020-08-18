@@ -28,7 +28,7 @@ struct Mesh {
   std::vector<unsigned int> indices;
   std::vector<Texture> textures;
 
-/*  void Draw(QOpenGLShaderProgram& shader);*/
+  void Draw(/*QOpenGLShaderProgram& shader*/);
 
   unsigned int VAO, VBO, EBO;
 };
@@ -38,9 +38,7 @@ class Model {
   Model(const std::string& path);
   ~Model();
 
-  std::vector<Mesh>& meshs() { return meshes; };
-
-/*  void Draw(QOpenGLShaderProgram& shader);*/
+  void Draw(/*QOpenGLShaderProgram& shader*/);
 
  private:
   void loadModel(const std::string& path);
@@ -53,3 +51,6 @@ class Model {
   std::vector<Mesh> meshes;
   std::string directory;
 };
+
+unsigned int TextureFromFile(const char* path, const std::string& directory,
+                             bool gamma);

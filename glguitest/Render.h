@@ -13,12 +13,10 @@ class Render : public QOpenGLFunctions_3_2_Core {
   void render(QWindow* win, float a, float b, QVector3D pos);
 
  private:
-  void LoadModel();
   void LoadShader();
   void LoadShaderLight();
   void CreateLight();
-  unsigned int TextureFromFile(const char* path, const std::string& directory,
-                               bool gamma);
+
  private:
   GLuint projection_;
   GLuint view_;

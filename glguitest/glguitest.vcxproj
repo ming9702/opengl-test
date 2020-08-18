@@ -41,6 +41,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>F:\Assimp\include;F:\mytest\glm;F:\mytest\glad\include;$(IncludePath)</IncludePath>
     <LibraryPath>F:\Assimp\lib\x64;$(LibraryPath)</LibraryPath>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_d</TargetName>
+    <OutDir>$(SolutionDir)bin\$(Platform)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(IncludePath)</IncludePath>

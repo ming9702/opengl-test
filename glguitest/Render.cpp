@@ -1,7 +1,5 @@
 #include "Render.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 #include <qmath.h>
 
 #include <QMatrix4x4>
@@ -18,7 +16,7 @@ Render::~Render() {}
 
 void Render::initialize() {
   initializeOpenGLFunctions();
-  LoadModel();
+  mymodel_ = new Model{"res/Banana_OBJ/Banana.obj"};
   LoadShader();
   LoadShaderLight();
   CreateLight();
@@ -26,49 +24,16 @@ void Render::initialize() {
   /*  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
 
   // 纹理
-//   unsigned int texture;
-//   QImage pic("res/awesomeface.png");
-//   qDebug() << pic;
-//   pic.format();
-//   glGenTextures(1, &texture);
-//   glBindTexture(GL_TEXTURE_2D, texture);
-//   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pic.width(), pic.height(), 0, GL_BGRA,
-//                GL_UNSIGNED_BYTE, pic.bits());
-//   glGenerateMipmap(GL_TEXTURE_2D);
-}
-
-void Render::LoadModel() {
-  mymodel_ = new Model{"res/Banana_OBJ/Banana.obj"};
-  for (auto& mesh : mymodel_->meshs()) {
-    glGenVertexArrays(1, &mesh.VAO);
-    glGenBuffers(1, &mesh.VBO);
-    glGenBuffers(1, &mesh.EBO);
-
-    glBindVertexArray(mesh.VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
-    glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex),
-                 &mesh.vertices[0], GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 mesh.indices.size() * sizeof(unsigned int), &mesh.indices[0],
-                 GL_STATIC_DRAW);
-
-    // 顶点位置
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-    // 顶点法线
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void*)offsetof(Vertex, Normal));
-    // 顶点纹理坐标
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void*)offsetof(Vertex, TexCoords));
-
-    glBindVertexArray(0);
-  }
+  //   unsigned int texture;
+  //   QImage pic("res/awesomeface.png");
+  //   qDebug() << pic;
+  //   pic.format();
+  //   glGenTextures(1, &texture);
+  //   glBindTexture(GL_TEXTURE_2D, texture);
+  //   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pic.width(), pic.height(), 0,
+  //   GL_BGRA,
+  //                GL_UNSIGNED_BYTE, pic.bits());
+  //   glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 void Render::LoadShader() {
@@ -144,46 +109,6 @@ void Render::CreateLight() {
                         (void*)(3 * sizeof(float)));
 }
 
-unsigned int Render::TextureFromFile(const char* path, const std::string& directory,
-                                     bool gamma) {
-  std::string filename = std::string(path);
-  filename = directory + '/' + filename;
-
-  unsigned int textureID;
-  glGenTextures(1, &textureID);
-
-  int width, height, nrComponents;
-  unsigned char* data =
-      stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-  if (data) {
-    GLenum format;
-    if (nrComponents == 1)
-      format = GL_RED;
-    else if (nrComponents == 3)
-      format = GL_RGB;
-    else if (nrComponents == 4)
-      format = GL_RGBA;
-
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
-                 GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    stbi_image_free(data);
-  } else {
-    std::cout << "Texture failed to load at path: " << path << std::endl;
-    stbi_image_free(data);
-  }
-
-  return textureID;
-}
-
 void Render::render(QWindow* win, float a, float b, QVector3D pos) {
   static float offset = 0.01f;
   offset = -offset;
@@ -231,12 +156,7 @@ void Render::render(QWindow* win, float a, float b, QVector3D pos) {
   pro_item_->setUniformValue(projection_, mat_projection);
   pro_item_->setUniformValue(view_, mat_view);
 
-  for (auto& mesh : mymodel_->meshs()) {
-    // 绘制网格
-    glBindVertexArray(mesh.VAO);
-    glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-  }
+  mymodel_->Draw();
 
   pro_item_->release();
 }
