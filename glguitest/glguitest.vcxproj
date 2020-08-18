@@ -39,7 +39,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>F:\Assimp\include;F:\mytest\glm;F:\mytest\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>F:\Assimp\include;F:\mytest\glm;F:\mytest\glguitest\deps\glad\include;F:\mytest\glguitest\deps\include;$(IncludePath)</IncludePath>
     <LibraryPath>F:\Assimp\lib\x64;$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>
@@ -85,7 +85,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\glad\src\glad.c" />
+    <ClCompile Include="..\deps\glad\src\glad.c" />
     <ClCompile Include="GLWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -104,7 +104,6 @@
   <ItemGroup>
     <ClInclude Include="Model.h" />
     <ClInclude Include="Render.h" />
-    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.f" />

@@ -12,15 +12,8 @@
     <Filter Include="gui">
       <UniqueIdentifier>{8cb79a00-ff3b-4bdc-9b58-4deba89f5e17}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-      <ParseFiles>true</ParseFiles>
-    </Filter>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-      <ParseFiles>true</ParseFiles>
+    <Filter Include="deps">
+      <UniqueIdentifier>{175f4973-b35d-49ab-bc2c-2d1310b192af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,8 +32,8 @@
     <ClCompile Include="Model.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\glad\src\glad.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\deps\glad\src\glad.c">
+      <Filter>deps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +50,6 @@
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

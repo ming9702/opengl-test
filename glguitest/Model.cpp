@@ -5,8 +5,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <glad/glad.h>
-
-#include "stb_image.h"
+#include <stb_image.h>
 
 Model::Model(const std::string& path) {
   if (!gladLoadGL()) throw new std::runtime_error("gladLoadGL err");
@@ -87,35 +86,34 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
       indices.push_back(face.mIndices[j]);
   }
   // 处理材质
-  //   if (mesh->mMaterialIndex >= 0) {
-  //     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-  //     std::vector<Texture> diffuseMaps = loadMaterialTextures(
-  //         material, aiTextureType_DIFFUSE, "texture_diffuse");
-  //     textures.insert(textures.end(), diffuseMaps.begin(),
-  //     diffuseMaps.end()); std::vector<Texture> specularMaps =
-  //     loadMaterialTextures(
-  //         material, aiTextureType_SPECULAR, "texture_specular");
-  //     textures.insert(textures.end(), specularMaps.begin(),
-  //     specularMaps.end());
-  //   }
+//   if (mesh->mMaterialIndex >= 0) {
+//     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+//     std::vector<Texture> diffuseMaps = loadMaterialTextures(
+//         material, aiTextureType_DIFFUSE, "texture_diffuse");
+//     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+//     std::vector<Texture> specularMaps = loadMaterialTextures(
+//         material, aiTextureType_SPECULAR, "texture_specular");
+//     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+//   }
+  textures.push_back(
+      {TextureFromFile("Banana_BaseColor.png", "Banana_OBJ", false)});
   return Mesh(vertices, indices, textures);
 }
 
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat,
                                                  aiTextureType type,
                                                  std::string typeName) {
-  //   std::vector<Texture> textures;
-  //   for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
-  //     aiString str;
-  //     mat->GetTexture(type, i, &str);
-  //     Texture texture;
-  //     texture.id = TextureFromFile(str.C_Str(), directory);
-  //     texture.type = typeName;
-  //     texture.path = str;
-  //     textures.push_back(texture);
-  //   }
-  //   return textures;
-  return {};
+  std::vector<Texture> textures;
+  for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+    aiString str;
+    mat->GetTexture(type, i, &str);
+    Texture texture;
+    texture.id = TextureFromFile(str.C_Str(), directory, 1);
+    texture.type = typeName;
+    texture.path = str;
+    textures.push_back(texture);
+  }
+  return textures;
 }
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
@@ -170,6 +168,22 @@ void Mesh::Draw(/*QOpenGLShaderProgram& shader*/) {
   // 	}
   // 	glActiveTexture(GL_TEXTURE0);
   //
+  for (unsigned int i = 0; i < textures.size(); i++) {
+    glActiveTexture(GL_TEXTURE0 + i);  //
+    //     // 在绑定之前激活相应的纹理单元
+    //     // 获取纹理序号（diffuse_textureN 中的 N）
+    //     std::string number;
+    //     std::string name = textures[i].type;
+    //     if (name == "texture_diffuse")
+    //       number = std::to_string(diffuseNr++);
+    //     else if (name == "texture_specular")
+    //       number = std::to_string(specularNr++);
+    //
+    //     shader.setFloat(("material." + name + number).c_str(), i);
+    glBindTexture(GL_TEXTURE_2D, textures[i].id);
+  }
+  glActiveTexture(GL_TEXTURE0);
+
   // 绘制网格
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
