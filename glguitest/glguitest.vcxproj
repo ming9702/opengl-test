@@ -39,8 +39,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>F:\Assimp\include;F:\mytest\glm;F:\mytest\glguitest\deps\glad\include;F:\mytest\glguitest\deps\include;$(IncludePath)</IncludePath>
-    <LibraryPath>F:\Assimp\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\mytest\glguitest\deps\glm;F:\mytest\glguitest\deps\Assimp\include;F:\mytest\glguitest\deps\glad\include;F:\mytest\glguitest\deps\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\mytest\glguitest\deps\Assimp\lib\x64;$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>
     <OutDir>$(SolutionDir)bin\$(Platform)\</OutDir>
