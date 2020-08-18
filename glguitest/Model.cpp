@@ -96,7 +96,10 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 //     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 //   }
   textures.push_back(
-      {TextureFromFile("Banana_BaseColor.png", "Banana_OBJ", false)});
+      {TextureFromFile("Banana_BaseColor.png", directory, false)});
+  textures.push_back(
+      {TextureFromFile("Banana_Normal.png", directory, false)});
+
   return Mesh(vertices, indices, textures);
 }
 

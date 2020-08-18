@@ -122,7 +122,8 @@ void Render::render(QWindow* win, float a, float b, QVector3D pos) {
   QMatrix4x4 mat_projection;
   mat_projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 1000.0f);
   QMatrix4x4 mat_view;
-  mat_view.translate(0.0f, 0.0f, -25.0f);
+  QVector3D view_pos{0.0f, 0.0f, -25.0f};
+  mat_view.translate(view_pos);
 
   pro_light_->bind();
 
@@ -145,9 +146,18 @@ void Render::render(QWindow* win, float a, float b, QVector3D pos) {
 
   //
   pro_item_->bind();
-  pro_item_->setUniformValue("objectColor", QVector3D{1.0f, 0.5f, 0.31f});
-  pro_item_->setUniformValue("lightColor", QVector3D{1.0f, 1.0f, 1.0f});
-  pro_item_->setUniformValue("lightPos", pos);
+  pro_item_->setUniformValue("viewPos", view_pos);
+  //
+  pro_item_->setUniformValue("light.ambient", 0.2f, 0.2f, 0.2f);
+  pro_item_->setUniformValue("light.diffuse", 0.5f, 0.5f, 0.5f);
+  pro_item_->setUniformValue("light.specular", 1.0f, 1.0f, 1.0f);
+  pro_item_->setUniformValue("light.position", pos);
+  // item
+  pro_item_->setUniformValue("material.ambient", 0);
+  pro_item_->setUniformValue("material.diffuse", 1);
+  pro_item_->setUniformValue("material.specular", 2);
+  pro_item_->setUniformValue("material.shininess", 0.5f);
+
   QMatrix4x4 mat_item_model;
   mat_item_model.rotate(a, 1.0f, 0.0f, 0.0f);
   mat_item_model.rotate(b, 0.0f, 1.0f, 0.0f);
