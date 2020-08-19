@@ -17,8 +17,8 @@ Render::~Render() {}
 void Render::initialize() {
   initializeOpenGLFunctions();
   mymodel_ = new Model{"res/Banana_OBJ/Banana.obj"};
-  LoadShader();
-  LoadShaderLight();
+  LoadShader("shader/item.vs", "shader/item.fs");
+  LoadShaderLight("shader/item.vs", "shader/light.fs");
   CreateLight();
   glEnable(GL_DEPTH_TEST);
   /*  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
@@ -36,13 +36,14 @@ void Render::initialize() {
   //   glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-void Render::LoadShader() {
+void Render::LoadShader(const std::string& file_vs,
+                        const std::string& file_fs) {
   std::ifstream in;
   std::istreambuf_iterator<char> beg(in), end;
-  in.open("shader.v");
+  in.open(file_vs);
   std::string shader_v(beg, end);
   in.close();
-  in.open("shader_light.f");
+  in.open(file_fs);
   std::string shader_f(beg, end);
   in.close();
   pro_item_ = new QOpenGLShaderProgram();
@@ -54,13 +55,14 @@ void Render::LoadShader() {
   model_ = pro_item_->uniformLocation("model");
 }
 
-void Render::LoadShaderLight() {
+void Render::LoadShaderLight(const std::string& file_vs,
+                             const std::string& file_fs) {
   std::ifstream in;
   std::istreambuf_iterator<char> beg(in), end;
-  in.open("shader.v");
+  in.open(file_vs);
   std::string shader_v(beg, end);
   in.close();
-  in.open("shader.f");
+  in.open(file_fs);
   std::string shader_f(beg, end);
   in.close();
   pro_light_ = new QOpenGLShaderProgram();
@@ -113,7 +115,6 @@ void Render::render(QWindow* win, float a, float b, QVector3D pos) {
   static float offset = 0.01f;
   offset = -offset;
   pos.setY(pos.y() + offset);
-  pos *= 10;
 
   const qreal retinaScale = win->devicePixelRatio();
   glViewport(0, 0, win->width() * retinaScale, win->height() * retinaScale);
@@ -122,13 +123,14 @@ void Render::render(QWindow* win, float a, float b, QVector3D pos) {
   QMatrix4x4 mat_projection;
   mat_projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 1000.0f);
   QMatrix4x4 mat_view;
-  QVector3D view_pos{0.0f, 0.0f, -25.0f};
+  QVector3D view_pos{0.0f, 0.0f, -3.0f};
   mat_view.translate(view_pos);
 
   pro_light_->bind();
 
   QMatrix4x4 mat_light_model;
   mat_light_model.translate(pos);
+  mat_light_model.scale(0.1f);
   pro_light_->setUniformValue("model", mat_light_model);
   pro_light_->setUniformValue("projection", mat_projection);
   pro_light_->setUniformValue("view", mat_view);
@@ -161,7 +163,7 @@ void Render::render(QWindow* win, float a, float b, QVector3D pos) {
   QMatrix4x4 mat_item_model;
   mat_item_model.rotate(a, 1.0f, 0.0f, 0.0f);
   mat_item_model.rotate(b, 0.0f, 1.0f, 0.0f);
-  mat_item_model.scale(0.08f);
+  mat_item_model.scale(0.01f);
   pro_item_->setUniformValue(model_, mat_item_model);
   pro_item_->setUniformValue(projection_, mat_projection);
   pro_item_->setUniformValue(view_, mat_view);

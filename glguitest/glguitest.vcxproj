@@ -106,9 +106,9 @@
     <ClInclude Include="Render.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.f" />
-    <None Include="shader.v" />
-    <None Include="shader_light.f" />
+    <None Include="shader\item.fs" />
+    <None Include="shader\item.vs" />
+    <None Include="shader\light.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

@@ -13,8 +13,8 @@ class Render : public QOpenGLFunctions_3_2_Core {
   void render(QWindow* win, float a, float b, QVector3D pos);
 
  private:
-  void LoadShader();
-  void LoadShaderLight();
+  void LoadShader(const std::string& file_vs, const std::string& file_fs);
+  void LoadShaderLight(const std::string& file_vs, const std::string& file_fs);
   void CreateLight();
 
  private:

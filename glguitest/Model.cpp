@@ -86,19 +86,23 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
       indices.push_back(face.mIndices[j]);
   }
   // 处理材质
-//   if (mesh->mMaterialIndex >= 0) {
-//     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-//     std::vector<Texture> diffuseMaps = loadMaterialTextures(
-//         material, aiTextureType_DIFFUSE, "texture_diffuse");
-//     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-//     std::vector<Texture> specularMaps = loadMaterialTextures(
-//         material, aiTextureType_SPECULAR, "texture_specular");
-//     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-//   }
+  //    if (mesh->mMaterialIndex >= 0) {
+  //      aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+  //      std::vector<Texture> diffuseMaps = loadMaterialTextures(
+  //          material, aiTextureType_DIFFUSE, "texture_diffuse");
+  //      textures.insert(textures.end(), diffuseMaps.begin(),
+  //      diffuseMaps.end()); std::vector<Texture> specularMaps =
+  //      loadMaterialTextures(
+  //          material, aiTextureType_SPECULAR, "texture_specular");
+  //      textures.insert(textures.end(), specularMaps.begin(),
+  //      specularMaps.end());
+  //    }
   textures.push_back(
       {TextureFromFile("Banana_BaseColor.png", directory, false)});
   textures.push_back(
-      {TextureFromFile("Banana_Normal.png", directory, false)});
+      {TextureFromFile("Banana_BaseColor.png", directory, false)});
+  textures.push_back(
+      {TextureFromFile("Banana_Roughtness.png", directory, false)});
 
   return Mesh(vertices, indices, textures);
 }
@@ -172,7 +176,7 @@ void Mesh::Draw(/*QOpenGLShaderProgram& shader*/) {
   // 	glActiveTexture(GL_TEXTURE0);
   //
   for (unsigned int i = 0; i < textures.size(); i++) {
-    glActiveTexture(GL_TEXTURE0 + i);  //
+    glActiveTexture(GL_TEXTURE0 + i);
     //     // 在绑定之前激活相应的纹理单元
     //     // 获取纹理序号（diffuse_textureN 中的 N）
     //     std::string number;

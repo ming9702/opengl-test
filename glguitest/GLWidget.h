@@ -1,7 +1,7 @@
 #pragma once
 #include <QOffscreenSurface>
-#include <QWidget>
 #include <QVector3D>
+#include <QWidget>
 
 class Render;
 class GLWidget : public QWidget {
