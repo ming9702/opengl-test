@@ -13,6 +13,9 @@
     <Filter Include="render\shader">
       <UniqueIdentifier>{82cfa7d9-bcd7-4908-97ff-6def781542d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="media">
+      <UniqueIdentifier>{202e2ea6-722f-4c5d-9ceb-6f9e1a3750a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Render.cpp">
@@ -33,6 +36,9 @@
     <ClCompile Include="..\deps\glad\src\glad.c">
       <Filter>deps</Filter>
     </ClCompile>
+    <ClCompile Include="RTMPInput.cpp">
+      <Filter>media</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GLWidget.h">
@@ -48,6 +54,9 @@
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="RTMPInput.h">
+      <Filter>media</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

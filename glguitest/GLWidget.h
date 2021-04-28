@@ -5,16 +5,16 @@
 
 class Render;
 class GLWidget : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
- public:
-  GLWidget(QWidget* parent);
-  ~GLWidget();
-  void Init();
-  void Refresh(float a, float b, QVector3D pos);
+  public:
+    GLWidget(QWidget *parent);
+    ~GLWidget();
+    void Init();
+    void Refresh(float a, float b, QVector3D pos);
 
- private:
-  QOpenGLContext* ctx_;
-  Render* render_;
-  QWindow* sur_;
+  private:
+    QOpenGLContext *ctx_;
+    Render *render_;
+    QWindow *sur_;
 };
