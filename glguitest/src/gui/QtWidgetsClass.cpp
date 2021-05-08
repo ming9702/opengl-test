@@ -5,7 +5,7 @@
 #include <QTimer>
 #include <QVector3D>
 
-#include "RTMPInput.h"
+#include "media/RTMPInput.h"
 
 QtWidgetsClass::QtWidgetsClass(QWidget *parent) : QWidget(parent) {
     ui.setupUi(this);
@@ -17,9 +17,13 @@ QtWidgetsClass::QtWidgetsClass(QWidget *parent) : QWidget(parent) {
                                      ui.horizontalSlider_4->value() / 255.0f,
                                      ui.horizontalSlider_5->value() / 255.0f));
     });
-    timer->start(100);
-    RTMPInput *input = new RTMPInput;
-    input->StreamOpen();
+
+    timer->start(40);
+
+    connect(ui.btn_rec, &QPushButton::clicked, [this]() {
+        QString url = ui.lineEdit->text();
+        ui.widget->AddInput(url);
+    });
 }
 
 QtWidgetsClass::~QtWidgetsClass() {}

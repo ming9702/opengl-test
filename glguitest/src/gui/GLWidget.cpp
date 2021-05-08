@@ -4,7 +4,7 @@
 #include <QOpenGLContext>
 #include <QWindow>
 
-#include "Render.h"
+#include "render/Render.h"
 
 GLWidget::GLWidget(QWidget *parent) : ctx_{nullptr}, QWidget(parent) {
     winId();
@@ -30,3 +30,5 @@ void GLWidget::Refresh(float a, float b, QVector3D pos) {
         ctx_->swapBuffers(sur_);
     }
 }
+
+void GLWidget::AddInput(QString url) { render_->AddInput(url); }

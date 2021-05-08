@@ -17,8 +17,13 @@ Render::~Render() {}
 void Render::initialize() {
     initializeOpenGLFunctions();
     mymodel_ = new Model{"res/Banana_OBJ/Banana.obj"};
-    LoadShader("shader/item.vs", "shader/item.fs");
+
+    av_render_ = new AVStreamRender;
+    av_render_->Init();
+
+    LoadShaderItem("shader/item.vs", "shader/item.fs");
     LoadShaderLight("shader/item.vs", "shader/light.fs");
+    LoadShaderStream("shader/stream.vs", "shader/stream.fs");
     CreateLight();
     glEnable(GL_DEPTH_TEST);
     /*  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
@@ -36,37 +41,20 @@ void Render::initialize() {
     //   glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-void Render::LoadShader(const std::string &file_vs, const std::string &file_fs) {
-    std::ifstream in;
-    std::istreambuf_iterator<char> beg(in), end;
-    in.open(file_vs);
-    std::string shader_v(beg, end);
-    in.close();
-    in.open(file_fs);
-    std::string shader_f(beg, end);
-    in.close();
-    pro_item_ = new QOpenGLShaderProgram();
-    pro_item_->addShaderFromSourceCode(QOpenGLShader::Vertex, shader_v.c_str());
-    pro_item_->addShaderFromSourceCode(QOpenGLShader::Fragment, shader_f.c_str());
-    pro_item_->link();
+void Render::LoadShaderStream(const std::string &file_vs, const std::string &file_fs) {
+    pro_stream_ = CreateShader(file_vs, file_fs);
+}
+
+void Render::LoadShaderItem(const std::string &file_vs, const std::string &file_fs) {
+    pro_item_ = CreateShader(file_vs, file_fs);
+
     projection_ = pro_item_->uniformLocation("projection");
     view_ = pro_item_->uniformLocation("view");
     model_ = pro_item_->uniformLocation("model");
 }
 
 void Render::LoadShaderLight(const std::string &file_vs, const std::string &file_fs) {
-    std::ifstream in;
-    std::istreambuf_iterator<char> beg(in), end;
-    in.open(file_vs);
-    std::string shader_v(beg, end);
-    in.close();
-    in.open(file_fs);
-    std::string shader_f(beg, end);
-    in.close();
-    pro_light_ = new QOpenGLShaderProgram();
-    pro_light_->addShaderFromSourceCode(QOpenGLShader::Vertex, shader_v.c_str());
-    pro_light_->addShaderFromSourceCode(QOpenGLShader::Fragment, shader_f.c_str());
-    pro_light_->link();
+    pro_light_ = CreateShader(file_vs, file_fs);
 }
 
 void Render::CreateLight() {
@@ -107,6 +95,22 @@ void Render::CreateLight() {
                           (void *) (3 * sizeof(float)));
 }
 
+QOpenGLShaderProgram *Render::CreateShader(const std::string &file_vs, const std::string &file_fs) {
+    std::ifstream in;
+    std::istreambuf_iterator<char> beg(in), end;
+    in.open(file_vs);
+    std::string shader_v(beg, end);
+    in.close();
+    in.open(file_fs);
+    std::string shader_f(beg, end);
+    in.close();
+    QOpenGLShaderProgram *shader_pro = new QOpenGLShaderProgram();
+    shader_pro->addShaderFromSourceCode(QOpenGLShader::Vertex, shader_v.c_str());
+    shader_pro->addShaderFromSourceCode(QOpenGLShader::Fragment, shader_f.c_str());
+    shader_pro->link();
+    return shader_pro;
+}
+
 void Render::render(QWindow *win, float a, float b, QVector3D pos) {
     static float offset = 0.01f;
     offset = -offset;
@@ -126,7 +130,7 @@ void Render::render(QWindow *win, float a, float b, QVector3D pos) {
 
     QMatrix4x4 mat_light_model;
     mat_light_model.translate(pos);
-    mat_light_model.scale(0.1f);
+    mat_light_model.scale(0.5f);
     pro_light_->setUniformValue("model", mat_light_model);
     pro_light_->setUniformValue("projection", mat_projection);
     pro_light_->setUniformValue("view", mat_view);
@@ -165,6 +169,12 @@ void Render::render(QWindow *win, float a, float b, QVector3D pos) {
     pro_item_->setUniformValue(view_, mat_view);
 
     mymodel_->Draw();
-
     pro_item_->release();
+
+    pro_stream_->bind();
+    pro_stream_->setUniformValue("ourTexture", 4);
+    av_render_->Draw();
+    pro_stream_->release();
 }
+
+void Render::AddInput(const QString &url) { av_render_->AddInput(url.toLocal8Bit().constData()); }

@@ -39,7 +39,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)deps\ffmpeg-4.4-full_build-shared\include;$(SolutionDir)deps\glm;$(SolutionDir)deps\Assimp\include;$(SolutionDir)deps\glad\include;$(SolutionDir)deps\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)deps\ffmpeg-4.4-full_build-shared\include;$(SolutionDir)deps\glm;$(SolutionDir)deps\Assimp\include;$(SolutionDir)deps\glad\include;$(SolutionDir)deps\include;$(SolutionDir)glguitest\src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)deps\ffmpeg-4.4-full_build-shared\lib;$(SolutionDir)deps\Assimp\lib\x64;$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_d</TargetName>
@@ -86,31 +86,31 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\deps\glad\src\glad.c" />
-    <ClCompile Include="GLWidget.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="QtWidgetsClass.cpp" />
-    <ClCompile Include="Render.cpp" />
-    <ClCompile Include="RTMPInput.cpp" />
+    <ClCompile Include="src\gui\GLWidget.cpp" />
+    <ClCompile Include="src\gui\main.cpp" />
+    <ClCompile Include="src\gui\QtWidgetsClass.cpp" />
+    <ClCompile Include="src\media\RTMPInput.cpp" />
+    <ClCompile Include="src\render\AVStreamRender.cpp" />
+    <ClCompile Include="src\render\Model.cpp" />
+    <ClCompile Include="src\render\Render.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="QtWidgetsClass.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="QtWidgetsClass.ui" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="GLWidget.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Render.h" />
-    <ClInclude Include="RTMPInput.h" />
+    <ClInclude Include="src\media\RTMPInput.h" />
+    <ClInclude Include="src\render\AVStreamRender.h" />
+    <ClInclude Include="src\render\Model.h" />
+    <ClInclude Include="src\render\Render.h" />
+    <QtMoc Include="src\gui\QtWidgetsClass.h" />
+    <QtMoc Include="src\gui\GLWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\item.fs" />
     <None Include="shader\item.vs" />
     <None Include="shader\light.fs" />
+    <None Include="shader\stream.fs" />
+    <None Include="shader\stream.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="src\gui\QtWidgetsClass.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
