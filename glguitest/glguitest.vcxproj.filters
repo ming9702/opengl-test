@@ -42,6 +42,9 @@
     <ClCompile Include="src\render\Render.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\Light.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\media\RTMPInput.h">
@@ -55,6 +58,12 @@
     </ClInclude>
     <ClInclude Include="src\render\Render.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\Light.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\media\FrameQueue.h">
+      <Filter>media</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

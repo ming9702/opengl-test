@@ -16,15 +16,19 @@ Render::~Render() {}
 
 void Render::initialize() {
     initializeOpenGLFunctions();
+
     mymodel_ = new Model{"res/Banana_OBJ/Banana.obj"};
 
     av_render_ = new AVStreamRender;
     av_render_->Init();
 
+    light_ = new Light;
+    light_->Init();
+
     LoadShaderItem("shader/item.vs", "shader/item.fs");
     LoadShaderLight("shader/item.vs", "shader/light.fs");
     LoadShaderStream("shader/stream.vs", "shader/stream.fs");
-    CreateLight();
+
     glEnable(GL_DEPTH_TEST);
     /*  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
 
@@ -57,44 +61,6 @@ void Render::LoadShaderLight(const std::string &file_vs, const std::string &file
     pro_light_ = CreateShader(file_vs, file_fs);
 }
 
-void Render::CreateLight() {
-    float vertices[] = {-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 0.0f,
-                        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
-                        -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-
-                        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
-                        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-                        -0.5f, 0.5f,  0.5f,  0.0f, 1.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
-
-                        -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 1.0f, 1.0f,
-                        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-                        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  0.5f,  1.0f, 0.0f,
-
-                        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
-                        0.5f,  -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 0.0f, 1.0f,
-                        0.5f,  -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-                        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 1.0f,
-                        0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
-                        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-
-                        -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
-                        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-                        -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f};
-    glGenVertexArrays(1, &light_vao_);
-    glGenBuffers(1, &light_vbo_);
-    // 2. 把我们的顶点数组复制到一个顶点缓冲中，供OpenGL使用
-    glBindVertexArray(light_vao_);
-    glBindBuffer(GL_ARRAY_BUFFER, light_vbo_);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // 4. 设定顶点属性指针
-    // xyz
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
-    // uv
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-                          (void *) (3 * sizeof(float)));
-}
-
 QOpenGLShaderProgram *Render::CreateShader(const std::string &file_vs, const std::string &file_fs) {
     std::ifstream in;
     std::istreambuf_iterator<char> beg(in), end;
@@ -120,6 +86,7 @@ void Render::render(QWindow *win, float a, float b, QVector3D pos) {
     glViewport(0, 0, win->width() * retinaScale, win->height() * retinaScale);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     QMatrix4x4 mat_projection;
     mat_projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 1000.0f);
     QMatrix4x4 mat_view;
@@ -135,15 +102,7 @@ void Render::render(QWindow *win, float a, float b, QVector3D pos) {
     pro_light_->setUniformValue("projection", mat_projection);
     pro_light_->setUniformValue("view", mat_view);
 
-    glBindVertexArray(light_vao_);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(0);
-    glBindVertexArray(0);
+    light_->Drow();
     pro_light_->release();
 
     //

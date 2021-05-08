@@ -1,6 +1,4 @@
 #pragma once
-#include <mutex>
-#include <queue>
 #include <string>
 #include <thread>
 
@@ -9,6 +7,13 @@ extern "C" {
 #include <libavutil/imgutils.h>
 #include <libswscale/swscale.h>
 }
+
+#include "FrameQueue.h"
+
+struct Decoder {
+    AVCodecContext *avctx{nullptr};
+    AVCodec *codec_{nullptr};
+};
 
 class RTMPInput {
   public:
@@ -21,6 +26,7 @@ class RTMPInput {
     void EndUsedFrame(AVFrame *frame);
 
   private:
+    bool CreateDecoder(Decoder *d, AVStream *st);
     void ReadThread();
 
   private:
@@ -29,13 +35,14 @@ class RTMPInput {
 
     AVFormatContext *ctx_{nullptr};
 
-    AVCodecContext *avctx_{nullptr};
-    AVCodec *codec_{nullptr};
+    Decoder vd_;
+    Decoder ad_;
+
     int video_index_ = -1;
+    int audio_index_ = -1;
 
     SwsContext *swsctx_{nullptr};
 
-    std::mutex queue_mtx_;
-    std::queue<AVFrame *> free_frame_list_;
-    std::queue<AVFrame *> used_frame_list_;
+    FrameQueue frame_vq_;
+    FrameQueue frame_aq_;
 };

@@ -2,6 +2,7 @@
 #include <QOpenGLFunctions_3_2_Core>
 
 #include "AVStreamRender.h"
+#include "Light.h"
 #include "Model.h"
 
 class QWindow;
@@ -32,5 +33,5 @@ class Render : public QOpenGLFunctions_3_2_Core {
 
     Model *mymodel_{nullptr};
     AVStreamRender *av_render_{nullptr};
-    unsigned int light_vao_, light_vbo_;
+    Light *light_{nullptr};
 };

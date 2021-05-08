@@ -86,6 +86,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\deps\glad\src\glad.c" />
+    <ClCompile Include="src\render\Light.cpp" />
     <ClCompile Include="src\gui\GLWidget.cpp" />
     <ClCompile Include="src\gui\main.cpp" />
     <ClCompile Include="src\gui\QtWidgetsClass.cpp" />
@@ -95,6 +96,8 @@
     <ClCompile Include="src\render\Render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\media\FrameQueue.h" />
+    <ClInclude Include="src\render\Light.h" />
     <ClInclude Include="src\media\RTMPInput.h" />
     <ClInclude Include="src\render\AVStreamRender.h" />
     <ClInclude Include="src\render\Model.h" />
