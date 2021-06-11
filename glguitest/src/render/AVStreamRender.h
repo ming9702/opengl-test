@@ -8,10 +8,14 @@ class AVStreamRender {
     AVStreamRender();
     ~AVStreamRender();
 
-    void AddInput(const std::string &url);
+    void AddInput(RTMPInput *input);
 
-    void Init();
+    void Init(float x, float y);
     void Draw();
+    unsigned int GetTextureID();
+
+  private:
+    bool UpdateTexture();
 
   private:
     unsigned int texture_ = -1;

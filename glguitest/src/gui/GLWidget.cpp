@@ -31,4 +31,4 @@ void GLWidget::Refresh(float a, float b, QVector3D pos) {
     }
 }
 
-void GLWidget::AddInput(QString url) { render_->AddInput(url); }
+void GLWidget::AddInput(RTMPInput *input, float x, float y) { render_->AddInput(input, x, y); }

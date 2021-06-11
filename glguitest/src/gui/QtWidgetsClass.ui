@@ -138,12 +138,44 @@
       <item>
        <widget class="QLineEdit" name="lineEdit">
         <property name="text">
-         <string>rtmp://10.11.0.189/live/livestream1212</string>
+         <string>rtmp://10.11.0.189/live/777</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="btn_rec">
+        <property name="text">
+         <string>确定</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="widget_3" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>250</height>
+      </size>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLineEdit" name="lineEdit_2">
+        <property name="text">
+         <string>rtmp://10.11.0.189/live/999</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_rec_2">
         <property name="text">
          <string>确定</string>
         </property>

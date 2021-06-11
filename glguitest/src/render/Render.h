@@ -13,7 +13,7 @@ class Render : public QOpenGLFunctions_3_2_Core {
     ~Render();
     void initialize();
     void render(QWindow *win, float a, float b, QVector3D pos);
-    void AddInput(const QString &url);
+    void AddInput(RTMPInput *input, float x, float y);
 
   private:
     void LoadShaderStream(const std::string &file_vs, const std::string &file_fs);
@@ -32,6 +32,6 @@ class Render : public QOpenGLFunctions_3_2_Core {
     QOpenGLShaderProgram *pro_stream_{nullptr};
 
     Model *mymodel_{nullptr};
-    AVStreamRender *av_render_{nullptr};
+    std::list<AVStreamRender *> avs_;
     Light *light_{nullptr};
 };

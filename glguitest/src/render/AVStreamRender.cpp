@@ -5,25 +5,20 @@ AVStreamRender::AVStreamRender() {}
 
 AVStreamRender::~AVStreamRender() {}
 
-void AVStreamRender::AddInput(const std::string &url) {
-    input_ = new RTMPInput;
-    input_->StreamOpen(url);
-}
+void AVStreamRender::AddInput(RTMPInput *input) { input_ = input; }
 
-void AVStreamRender::Init() {
+void AVStreamRender::Init(float x, float y) {
     glGenTextures(1, &texture_);
 
-    float vertices[] = {
-        //     ---- 位置 ----         - 纹理坐标 -
-        0.0f,  1.0f,  0.0f, 1.0f,
-        1.0f, // 右上
-        0.0f,  0.0f, 0.0f, 1.0f,
-        0.0f, // 右下
-        -1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, // 左下
-        -1.0f, 1.0f,  0.0f, 0.0f,
-        1.0f // 左上
-    };
+    //      --位置--  --纹理--
+    float vertices[] = {// 右上
+                        x + 1.0f, y, 0.0f, 1.0f, 1.0f,
+                        // 右下
+                        x + 1.0f, y + 1.0f, 0.0f, 1.0f, 0.0f,
+                        // 左下
+                        x, y + 1.0f, 0.0f, 0.0f, 0.0f,
+                        // 左上
+                        x, y, 0.0f, 0.0f, 1.0f};
 
     unsigned int indices[] = {
         // 注意索引从0开始!
@@ -31,7 +26,7 @@ void AVStreamRender::Init() {
         1, 2, 3  // 第二个三角形
     };
 
-    // 
+    //
     glGenVertexArrays(1, &vao_);
     glGenBuffers(1, &vbo_);
     glGenBuffers(1, &ebo_);
@@ -55,8 +50,21 @@ void AVStreamRender::Init() {
 void AVStreamRender::Draw() {
     if (!input_) return;
 
+    UpdateTexture();
+
+    glBindVertexArray(vao_);
+
+    // glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    glBindVertexArray(0);
+}
+
+unsigned int AVStreamRender::GetTextureID() { return texture_; }
+
+bool AVStreamRender::UpdateTexture() {
     AVFrame *frame = input_->BeginUsedFrame();
-    if (!frame) return;
+    if (!frame) return false;
 
     glActiveTexture(GL_TEXTURE0 + texture_);
     //     // 在绑定之前激活相应的纹理单元
@@ -71,22 +79,13 @@ void AVStreamRender::Draw() {
     //     shader.setFloat(("material." + name + number).c_str(), i);
     glBindTexture(GL_TEXTURE_2D, texture_);
 
-    glBindVertexArray(vao_);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, frame->width, frame->height, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, frame->width, frame->height, 0, GL_RGB, GL_UNSIGNED_BYTE,
                  frame->data[0]);
 
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    input_->EndUsedFrame(frame);
-    // glDrawArrays(GL_TRIANGLES, 0, 3);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
     glActiveTexture(GL_TEXTURE0);
-    glBindVertexArray(0);
 
-    // 绘制网格
-    //     glBindVertexArray(VAO);
-    //     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-    //     glBindVertexArray(0);
+    input_->EndUsedFrame(frame);
+    return true;
 }

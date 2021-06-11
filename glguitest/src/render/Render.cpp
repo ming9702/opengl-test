@@ -19,9 +19,6 @@ void Render::initialize() {
 
     mymodel_ = new Model{"res/Banana_OBJ/Banana.obj"};
 
-    av_render_ = new AVStreamRender;
-    av_render_->Init();
-
     light_ = new Light;
     light_->Init();
 
@@ -83,7 +80,18 @@ void Render::render(QWindow *win, float a, float b, QVector3D pos) {
     pos.setY(pos.y() + offset);
 
     const qreal retinaScale = win->devicePixelRatio();
-    glViewport(0, 0, win->width() * retinaScale, win->height() * retinaScale);
+    int width = win->width();
+    int height = width / 16 * 9;
+
+    if (height > win->height()) {
+        height = win->height();
+        width = height / 9 * 16;
+    }
+
+    int x = (win->width() - width) / 2;
+    int y = (win->height() - height) / 2;
+
+    glViewport(x, y, width * retinaScale, height * retinaScale);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -131,9 +139,17 @@ void Render::render(QWindow *win, float a, float b, QVector3D pos) {
     pro_item_->release();
 
     pro_stream_->bind();
-    pro_stream_->setUniformValue("ourTexture", 4);
-    av_render_->Draw();
+    for (auto av : avs_) {
+        pro_stream_->setUniformValue("ourTexture", av->GetTextureID());
+        av->Draw();
+    }
     pro_stream_->release();
 }
 
-void Render::AddInput(const QString &url) { av_render_->AddInput(url.toLocal8Bit().constData()); }
+void Render::AddInput(RTMPInput *input, float x, float y) {
+    AVStreamRender *avsr = new AVStreamRender;
+    avsr->Init(x, y);
+    avsr->AddInput(input);
+
+    avs_.push_back(avsr);
+}

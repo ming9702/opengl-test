@@ -13,7 +13,7 @@ class GLWidget : public QWidget {
     ~GLWidget();
     void Init();
     void Refresh(float a, float b, QVector3D pos);
-    void AddInput(QString url);
+    void AddInput(RTMPInput *input, float x, float y);
 
   private:
     QOpenGLContext *ctx_;
